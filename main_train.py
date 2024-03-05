@@ -20,7 +20,7 @@ import torch.multiprocessing as mp
 import torch.nn.parallel
 import torch.utils.data.distributed
 
-from network.swin_unetr_unpooling2 import SwinUNETR
+from network.RSSNet import RSSNet
 
 from monai.inferers import sliding_window_inference
 from monai.losses import DiceLoss
@@ -103,7 +103,7 @@ def main():
         args.fold = i
         args.amp = not args.noamp
         args.distributed = args.distributed
-        args.logdir = "./" + args.logdir + "/" + "fold "str(args.fold)
+        args.logdir = "./" + args.logdir + "/" + "fold " + str(args.fold)
         # args
         if args.distributed:
             args.ngpus_per_node = torch.cuda.device_count()
@@ -140,7 +140,7 @@ def main_worker(gpu, args):
     model_name = args.pretrained_model_name
     pretrained_pth = os.path.join(pretrained_dir, model_name)
 
-    model = SwinUNETR(
+    model = RSSNet(
         img_size=(args.roi_x, args.roi_y, args.roi_z),
         in_channels=args.in_channels,
         out_channels=args.out_channels,
